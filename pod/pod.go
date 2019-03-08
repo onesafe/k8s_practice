@@ -1,11 +1,12 @@
-package k8s_practice
+package pod
 
 import (
 	"k8s.io/client-go/informers"
 	"time"
 	"fmt"
-	coreV1 "k8s.io/api/core/v1"
+	apiV1 "k8s.io/client-go/pkg/api/v1"
 	listerV1 "k8s.io/client-go/listers/core/v1"
+	"github.com/onesafe/k8s_practice/client"
 )
 
 var (
@@ -13,7 +14,7 @@ var (
 )
 
 func init() {
-	clientset, err := GetK8sClientSet();
+	clientset, err := client.GetK8sClientSet();
 	if err != nil {
 		fmt.Print("Get k8s client error" + err.Error())
 	}
@@ -26,7 +27,7 @@ func init() {
 	podLister = sharedInformerFactory.Core().V1().Pods().Lister()
 }
 
-func GetPod(namespace string, podname string) *coreV1.Pod {
+func GetPod(namespace string, podname string) *apiV1.Pod {
 	pod, err := podLister.Pods(namespace).Get(podname)
 	if err != nil {
 		fmt.Println("Get Pod error" + err.Error())

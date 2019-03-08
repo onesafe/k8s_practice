@@ -1,40 +1,49 @@
 package resource
 
 import (
-	"time"
 	"fmt"
 	apiv1beta1 "k8s.io/api/extensions/v1beta1"
-	"k8s.io/client-go/informers"
 	"github.com/onesafe/k8s_practice/client"
 	listerV1beta1 "k8s.io/client-go/listers/extensions/v1beta1"
-	"gitlab.4pd.io/pht3/aol/pkg/signals"
+	"k8s.io/apimachinery/pkg/labels"
+	metaV1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 var (
-	deploymentLister listerV1beta1.DeploymentLister
+	DeploymentLister listerV1beta1.DeploymentLister
+
 )
 
-func init() {
-	fmt.Println("init k8s client")
-	clientset, err := client.GetK8sClientSet();
-	if err != nil {
-		fmt.Print("Get k8s client error: " + err.Error())
-	}
-
-	deploymentInformerFactory := informers.NewSharedInformerFactory(clientset, time.Minute*10)
-
-	deployInformer := deploymentInformerFactory.Extensions().V1beta1().Deployments()
-
-	stopCh := signals.SetupSignalHandler()
-	deploymentInformerFactory.Start(stopCh)
-
-	deploymentLister = deployInformer.Lister()
+func InitDeploymentLister() {
+	DeploymentLister = KubeInformerFactory.Extensions().V1beta1().Deployments().Lister()
 }
 
 func GetDeployment(namespace string, deploymentName string) (*apiv1beta1.Deployment, error) {
-	deployment, err := deploymentLister.Deployments(namespace).Get(deploymentName)
+	deployment, err := DeploymentLister.Deployments(namespace).Get(deploymentName)
 	if err != nil {
 		return nil, err
 	}
 	return deployment, nil
+}
+
+func ListDeployment(namespace string, selector labels.Selector) ([]*apiv1beta1.Deployment, error){
+	deployments, err := DeploymentLister.Deployments(namespace).List(selector)
+	if err != nil {
+		return nil, err
+	}
+	return deployments, nil
+}
+
+func TestDeploymentConn(namespace string) {
+	Clientset, err := client.GetK8sClientSet();
+	DeploysClient := Clientset.ExtensionsV1beta1().Deployments(namespace)
+	listOptions := metaV1.ListOptions{}
+	deploys, err := DeploysClient.List(listOptions)
+	if err != nil {
+		fmt.Println("Test Conn error: ", err.Error())
+	}
+
+	for _, d := range deploys.Items {
+		fmt.Println(d.Name)
+	}
 }

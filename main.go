@@ -13,8 +13,9 @@ func main() {
 	// 构造informer Factory
 	resource.Factory()
 
-	// 通过informerFactory注册deployment Lister
+	// 通过informerFactory注册 Lister
 	resource.InitDeploymentLister()
+	resource.InitNamespaceLister()
 
 	// informer开始跑，[这一步必须在注册Lister之后，这样才能找到Lister，不然的话找不到Lister直接返回了]
 	resource.Start()
@@ -35,6 +36,22 @@ func main() {
 	} else {
 		for i, d := range deployments {
 			fmt.Println(i, d.Name)
+		}
+	}
+
+	ns, err := resource.GetNamespace("kube-system")
+	if err != nil {
+		fmt.Println("Get Namespace error: ", err.Error())
+	} else {
+		fmt.Println(ns.Name)
+	}
+
+	nss, err := resource.ListNamespace(labels.Everything())
+	if err != nil {
+		fmt.Println("List Namespace error: ", err.Error())
+	} else {
+		for i, ns := range nss {
+			fmt.Println(i, ns.Name)
 		}
 	}
 }

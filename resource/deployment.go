@@ -4,15 +4,10 @@ import (
 	"fmt"
 	apiv1beta1 "k8s.io/api/extensions/v1beta1"
 	"github.com/onesafe/k8s_practice/client"
-	listerV1beta1 "k8s.io/client-go/listers/extensions/v1beta1"
 	"k8s.io/apimachinery/pkg/labels"
 	metaV1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-var (
-	DeploymentLister listerV1beta1.DeploymentLister
-
-)
 
 func InitDeploymentLister() {
 	DeploymentLister = KubeInformerFactory.Extensions().V1beta1().Deployments().Lister()

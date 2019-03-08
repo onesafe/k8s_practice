@@ -7,7 +7,7 @@ import (
 )
 
 var (
-	KUBECONFIGPATH = "~/.kube/devops.kubeconfig"
+	KUBECONFIGPATH = "/Users/wangyiping/.kube/devops.kubeconfig"
 	K8SAPIINIT bool
 	K8SAPI *kubernetes.Clientset
 )

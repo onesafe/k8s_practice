@@ -14,8 +14,9 @@ func main() {
 	resource.Factory()
 
 	// 通过informerFactory注册 Lister
-	resource.InitDeploymentLister()
-	resource.InitNamespaceLister()
+	resource.RegisterDeploymentLister()
+	resource.RegisterNamespaceLister()
+	resource.RegisterPodLister()
 
 	// informer开始跑，[这一步必须在注册Lister之后，这样才能找到Lister，不然的话找不到Lister直接返回了]
 	resource.Start()
@@ -54,4 +55,21 @@ func main() {
 			fmt.Println(i, ns.Name)
 		}
 	}
+
+	pod, err := resource.GetPod("kube-system", "core-dns")
+	if err != nil {
+		fmt.Println("Get Pod error: ", err.Error())
+	} else {
+		fmt.Println(pod)
+	}
+
+	pods, err := resource.ListPod(labels.Everything())
+	if err != nil {
+		fmt.Println("List Pod error: ", err.Error())
+	} else {
+		for i:=0; i<5; i++ {
+			fmt.Println(pods[i].Name)
+		}
+	}
+
 }

@@ -8,4 +8,5 @@ import (
 var (
 	DeploymentLister listerV1beta1.DeploymentLister
 	NamespaceLister listerV1.NamespaceLister
+	PodLister listerV1.PodLister
 )

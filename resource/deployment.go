@@ -9,7 +9,7 @@ import (
 )
 
 
-func InitDeploymentLister() {
+func RegisterDeploymentLister() {
 	DeploymentLister = KubeInformerFactory.Extensions().V1beta1().Deployments().Lister()
 }
 

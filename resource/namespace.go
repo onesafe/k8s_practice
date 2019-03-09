@@ -8,7 +8,7 @@ import (
 	"k8s.io/apimachinery/pkg/labels"
 )
 
-func InitNamespaceLister() {
+func RegisterNamespaceLister() {
 	NamespaceLister = KubeInformerFactory.Core().V1().Namespaces().Lister()
 }
 

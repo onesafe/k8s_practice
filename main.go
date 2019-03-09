@@ -17,6 +17,7 @@ func main() {
 	resource.RegisterDeploymentLister()
 	resource.RegisterNamespaceLister()
 	resource.RegisterPodLister()
+	resource.RegisterNodeLister()
 
 	// informer开始跑，[这一步必须在注册Lister之后，这样才能找到Lister，不然的话找不到Lister直接返回了]
 	resource.Start()
@@ -69,6 +70,22 @@ func main() {
 	} else {
 		for i:=0; i<5; i++ {
 			fmt.Println(pods[i].Name)
+		}
+	}
+
+	node, err := resource.GetNode("m7-devops-gpu01")
+	if err != nil {
+		fmt.Println("Get Node error: ", err.Error())
+	} else {
+		fmt.Println(node.Name, node.ClusterName, node.Labels)
+	}
+
+	nodes, err := resource.ListNode(labels.Everything())
+	if err != nil {
+		fmt.Println("List Node error: ", err.Error())
+	} else {
+		for i, node := range nodes {
+			fmt.Println(i, node.Name)
 		}
 	}
 

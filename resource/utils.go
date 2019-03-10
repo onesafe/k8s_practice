@@ -10,4 +10,5 @@ var (
 	NamespaceLister listerV1.NamespaceLister
 	PodLister listerV1.PodLister
 	NodeLister listerV1.NodeLister
+	ConfigMapLister listerV1.ConfigMapLister
 )
